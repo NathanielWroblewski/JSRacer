@@ -1,0 +1,95 @@
+<table class="racer_table">
+  <tr id="player1_strip">
+    <td class="active"></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td id="last1"></td>
+    <td id="winner1" class="hidden">Winner!</td>
+  </tr>
+  <tr id="player2_strip">
+    <td class="active"></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td id="last2"></td>
+    <td id="winner2" class="hidden">Winner!</td>
+  </tr>
+
+<script>
+var player1 = 1;
+var player2 = 1;
+var startTime;
+
+$(document).ready(function(){
+  $(document).on('keyup', function(e){
+    if (player1 === 1 && player2 === 1) {
+      startTime = new Date().getTime();
+    }
+    if (e.keyCode == 81) {
+      if (player2 === 12 || player1 === 12){}
+      else if (player1 < 11) {
+        $('#player1_strip').find('td:nth-child('+player1+')').removeClass('active');
+        player1 += 1;
+        $('#player1_strip').find('td:nth-child('+player1+')').addClass('active');
+      }
+      else {
+        $('#player1_strip').find('td:nth-child('+player1+')').removeClass('active');
+        player1 = 12;
+        $('#player1_strip').find('td:nth-child('+player1+')').addClass('active');
+        $('#winner1').removeClass('hidden');
+        var finishTime = new Date().getTime();
+        $('<p>'+((finishTime-startTime) / 1000)+' seconds</p>').appendTo('#stats');
+        $('#player2name').remove();
+        $("<input type='text' name='time' value='"+((finishTime-startTime) / 1000)+"' >").appendTo('#results');
+      }
+    }
+    else if (e.keyCode == 80) {
+      if (player2 === 12 || player1 === 12){}
+      else if (player2 < 11) {
+        $('#player2_strip').find('td:nth-child('+player2+')').removeClass('active');
+        player2 += 1;
+        $('#player2_strip').find('td:nth-child('+player2+')').addClass('active');
+      }
+      else {
+        $('#player2_strip').find('td:nth-child('+player2+')').removeClass('active');
+        player2 = 12;
+        $('#player2_strip').find('td:nth-child('+player2+')').addClass('active');
+        $('#winner2').removeClass('hidden');
+        var finishTime = new Date().getTime();
+        $('<p>'+((finishTime-startTime) / 1000)+' seconds</p>').appendTo('#stats');
+        $('#player1name').remove();
+        $("<input type='text' name='time' value='"+((finishTime-startTime) / 1000)+"' >").appendTo('#results');
+      }
+    }
+  });
+});
+
+</script>
+</table>
+
+<div id="stats"></div>
+<div id="buttons">
+<form id="results" action='/results/' method='post'> 
+    <input type="submit" value="View Results">
+    <input id="player1name" type="text" name="name" value="<%= @player1.name %>">
+    <input id="player2name" type="text" name="name" value="<%= @player2.name %>">
+</form>
+<form action'/play' method='post'>
+    <input type="submit" value="Play Again!">
+</form>
+</form>
